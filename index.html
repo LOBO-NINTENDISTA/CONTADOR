@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background-color: #282828;
+    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header {
+    text-align: center;
+    padding: 20px;
+    background-color: #000;
+    color: #0f0;
+    font-size: 24px;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+    max-width: 1000px;
+  }
+
+  .textbox-container {
+    width: 45%;
+  }
+
+  .textbox {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
+  }
+
+  .output {
+    margin-top: 10px;
+    color: #0f0;
+  }
+</style>
+<title>Contador de Caracteres por Linha</title>
+</head>
+<body>
+  <div class="header">
+    CONTADOR DE CARACTERES PARA TRADUZIR JOGOS
+    <div>Lobo Nintendista</div>
+  </div>
+  <div class="container">
+    <div class="textbox-container">
+      <h2>Texto Original</h2>
+      <textarea id="textbox1" class="textbox" rows="8" cols="30" oninput="countCharacters(1)"></textarea>
+      <div>
+        <button onclick="copyText(1)">Copiar Texto</button>
+        <div class="output" id="output1"></div>
+      </div>
+    </div>
+    <div class="textbox-container">
+      <h2>Texto Modificado</h2>
+      <textarea id="textbox2" class="textbox" rows="8" cols="30" oninput="countCharacters(2)"></textarea>
+      <div>
+        <button onclick="copyText(2)">Copiar Texto</button>
+        <div class="output" id="output2"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  function countCharacters(textboxNumber) {
+    const textboxId = `textbox${textboxNumber}`;
+    const outputId = `output${textboxNumber}`;
+
+    const textbox = document.getElementById(textboxId);
+    const outputDiv = document.getElementById(outputId);
+
+    const lines = textbox.value.split('\n');
+    let outputHTML = '';
+
+    for (let i = 0; i < lines.length; i++) {
+      // Não é mais aplicada a substituição dos padrões aqui
+      const text = lines[i];
+      outputHTML += `Linha ${i + 1}: ${text.length} caracteres<br>`;
+    }
+
+    outputDiv.innerHTML = outputHTML;
+  }
+
+  function copyText(textboxNumber) {
+    const textboxId = `textbox${textboxNumber}`;
+    const textbox = document.getElementById(textboxId);
+    
+    textbox.select();
+    document.execCommand("copy");
+  }
+</script>
+</body>
+</html>
