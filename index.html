@@ -29,6 +29,7 @@
 
   .textbox-container {
     width: 45%;
+    text-align: center; /* Centraliza o conteúdo */
   }
 
   .textbox {
@@ -43,6 +44,17 @@
   .output {
     margin-top: 10px;
     color: #0f0;
+    text-align: center; /* Centraliza o conteúdo */
+  }
+
+  .line-break-button {
+    margin-top: 10px;
+    text-align: center; /* Centraliza o botão */
+  }
+    .neon-text {
+    font-size: 10px;
+    color: #00fff6; /* Cor verde neon. Você pode ajustar essa cor conforme necessário. */
+    text-shadow: 0 0 10px #00fff6, 0 0 20px #00fff6, 0 0 30px #00fff6; /* Efeito de brilho neon. */
   }
 </style>
 <title>Contador de Caracteres por Linha</title>
@@ -50,7 +62,8 @@
 <body>
   <div class="header">
     CONTADOR DE CARACTERES PARA TRADUZIR JOGOS
-    <div>Lobo Nintendista</div>
+    <div>ROMHACK</div>
+	<div class="neon-text">LOBO NINTENDISTA</div>
   </div>
   <div class="container">
     <div class="textbox-container">
@@ -65,8 +78,15 @@
       <h2>Texto Modificado</h2>
       <textarea id="textbox2" class="textbox" rows="8" cols="30" oninput="countCharacters(2)"></textarea>
       <div>
+        <label for="lineBreakInterval">Quebra de Linha a cada (BYTES):</label>
+        <input type="number" id="lineBreakInterval" value="30"> <!-- Valor padrão de 50 caracteres -->
+        <button onclick="addLineBreaks()">Adicionar Quebras de Linha</button>
+        <button onclick="removeLineBreaks()">Remover Quebras de Linha</button>
         <button onclick="copyText(2)">Copiar Texto</button>
         <div class="output" id="output2"></div>
+        <label for="specialCharacter">Marcações de jogo:</label>
+        <input type="text" id="specialCharacter" value=""> <!-- Pode ser qualquer caractere desejado -->
+        <button onclick="addSpecialCharacter()">Adicionar Marcações</button>
       </div>
     </div>
   </div>
@@ -83,7 +103,6 @@
     let outputHTML = '';
 
     for (let i = 0; i < lines.length; i++) {
-      // Não é mais aplicada a substituição dos padrões aqui
       const text = lines[i];
       outputHTML += `Linha ${i + 1}: ${text.length} caracteres<br>`;
     }
@@ -97,6 +116,66 @@
     
     textbox.select();
     document.execCommand("copy");
+  }
+
+  function removeLineBreaks() {
+    const textboxModified = document.getElementById('textbox2');
+    const textWithoutLineBreaks = textboxModified.value.replace(/\n/g, ' ');
+    textboxModified.value = textWithoutLineBreaks;
+    countCharacters(2); // Atualize a contagem de caracteres
+  }
+
+  function addLineBreaks() {
+    const textboxModified = document.getElementById('textbox2');
+    const lineBreakInterval = parseInt(document.getElementById('lineBreakInterval').value);
+    const textWithLineBreaks = addLineBreaksToText(textboxModified.value, lineBreakInterval);
+    textboxModified.value = textWithLineBreaks;
+    countCharacters(2); // Atualize a contagem de caracteres
+  }
+
+  function addSpecialCharacter() {
+    const textboxModified = document.getElementById('textbox2');
+    const specialCharacter = document.getElementById('specialCharacter').value;
+    const textWithSpecialCharacter = addSpecialCharacterToText(textboxModified.value, specialCharacter);
+    textboxModified.value = textWithSpecialCharacter;
+    countCharacters(2); // Atualize a contagem de caracteres
+  }
+
+  function addSpecialCharacterToText(text, specialCharacter) {
+    const lines = text.split('\n');
+    const resultLines = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (i === lines.length - 1) {
+        resultLines.push(line); // Última linha, não adicione o caractere especial
+      } else {
+        resultLines.push(line + specialCharacter); // Adicione o caractere especial ao final de cada linha, exceto na última
+      }
+    }
+
+    return resultLines.join('\n');
+  }
+
+  function addLineBreaksToText(text, lineBreakInterval) {
+    const words = text.split(' ');
+    let lines = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      if ((currentLine + ' ' + word).length <= lineBreakInterval) {
+        currentLine += (currentLine === '' ? '' : ' ') + word;
+      } else {
+        lines.push(currentLine);
+        currentLine = word;
+      }
+    }
+
+    if (currentLine !== '') {
+      lines.push(currentLine);
+    }
+
+    return lines.join('\n');
   }
 </script>
 </body>
