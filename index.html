@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <style>
   body {
     background-color: #282828;
@@ -30,7 +29,7 @@
 
   .textbox-container {
     width: 45%;
-    text-align: center; /* Centraliza o conteúdo */
+    text-align: center;
   }
 
   .textbox {
@@ -42,37 +41,46 @@
     color: white;
   }
 
-  /* Estilização dos botões */
-  .button {
-    padding: 10px 20px;
-    margin: 5px; /* Espaço entre os botões */
-    background-color: #007BFF; /* Cor de fundo */
-    color: white; /* Cor do texto */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Efeito de transição suave */
-  }
-
-  .button:hover {
-    background-color: #0056b3; /* Cor de fundo ao passar o mouse */
-  }
-
   .output {
     margin-top: 10px;
     color: #0f0;
-    text-align: center; /* Centraliza o conteúdo */
+    text-align: center;
   }
 
-  .line-break-button {
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 10px;
-    text-align: center; /* Centraliza o botão */
+  }
+
+  .button-container button {
+    margin: 5px 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .button-container button:hover {
+    background-color: #0056b3;
+  }
+
+  .button-container input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #333;
+    color: white;
   }
 
   .neon-text {
     font-size: 10px;
-    color: #00fff6; /* Cor verde neon. Você pode ajustar essa cor conforme necessário. */
-    text-shadow: 0 0 10px #00fff6, 0 0 20px #00fff6, 0 0 30px #00fff6; /* Efeito de brilho neon. */
+    color: #00fff6;
+    text-shadow: 0 0 10px #00fff6, 0 0 20px #00fff6, 0 0 30px #00fff6;
   }
 </style>
 <title>Contador de Caracteres por Linha</title>
@@ -88,7 +96,7 @@
       <h2>Texto Original</h2>
       <textarea id="textbox1" class="textbox" rows="8" cols="30" oninput="countCharacters(1)"></textarea>
       <div class="button-container">
-        <button class="button" onclick="copyText(1)"><i class="fas fa-copy"></i> Copiar Texto</button>
+        <button class="copy-button" onclick="copyText(1)">Copiar Texto</button>
         <div class="output" id="output1"></div>
       </div>
     </div>
@@ -97,20 +105,19 @@
       <textarea id="textbox2" class="textbox" rows="8" cols="30" oninput="countCharacters(2)"></textarea>
       <div class="button-container">
         <label for="lineBreakInterval">Quebra de Linha a cada (BYTES):</label>
-        <input type="number" id="lineBreakInterval" value="30"> <!-- Valor padrão de 50 caracteres -->
-        <button class="button" onclick="addLineBreaks()"><i class="fas fa-code"></i> Adicionar Quebras de Linha</button>
-        <button class="button" onclick="removeLineBreaks()"><i class="fas fa-eraser"></i> Remover Quebras de Linha</button>
-        <button class="button" onclick="copyText(2)"><i class="fas fa-copy"></i> Copiar Texto</button>
+        <input type="number" id="lineBreakInterval" value="30">
+        <button class="line-break-button" onclick="addLineBreaks()">Adicionar Quebras de Linha</button>
+        <button class="line-break-button" onclick="removeLineBreaks()">Remover Quebras de Linha</button>
+        <button class="copy-button" onclick="copyText(2)">Copiar Texto</button>
         <div class="output" id="output2"></div>
         <label for="specialCharacter">Marcações de jogo:</label>
-        <input type="text" id="specialCharacter" value=""> <!-- Pode ser qualquer caractere desejado -->
-        <button class="button" onclick="addSpecialCharacter()"><i class="fas fa-plus"></i> Adicionar Marcações</button>
+        <input type="text" id="specialCharacter" value="">
+        <button class="special-char-button" onclick="addSpecialCharacter()">Adicionar Marcações</button>
       </div>
     </div>
   </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-<script>
+  <script>
   function countCharacters(textboxNumber) {
     const textboxId = `textbox${textboxNumber}`;
     const outputId = `output${textboxNumber}`;
