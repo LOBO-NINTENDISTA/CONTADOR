@@ -28,8 +28,9 @@
   .container {
     display: flex;
     justify-content: space-around;
-    margin: 20px auto;
+    flex-wrap: wrap; /* Para que os elementos possam quebrar para a próxima linha */
     max-width: 1000px;
+    margin: 0 auto;
   }
 
   .textbox-container {
@@ -53,14 +54,13 @@
   }
 
   .button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%; /* Para ocupar a largura total da caixa de texto */
+    text-align: center; /* Centralize os botões */
     margin-top: 10px;
   }
 
   .button-container button {
-    margin: 5px 0;
+    margin: 5px;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -100,21 +100,18 @@
     <div class="textbox-container">
       <h2>Texto Original</h2>
       <textarea id="textbox1" class="textbox" rows="8" cols="30" oninput="countCharacters(1)"></textarea>
-      <div class="button-container">
-        <button class="copy-button" onclick="copyText(1)">Copiar Texto</button>
-        <div class="output" id="output1"></div>
-      </div>
+      <div class="output" id="output1"></div>
     </div>
     <div class="textbox-container">
       <h2>Texto Modificado</h2>
       <textarea id="textbox2" class="textbox" rows="8" cols="30" oninput="countCharacters(2)"></textarea>
+      <div class="output" id="output2"></div>
       <div class="button-container">
         <label for="lineBreakInterval">Quebra de Linha em: (BYTES)</label>
         <input type="number" id="lineBreakInterval" value="30">
         <button class="line-break-button" onclick="addLineBreaks()">Adicionar</button>
         <button class="line-break-button" onclick="removeLineBreaks()">Remover</button>
         <button class="copy-button" onclick="copyText(2)">Copiar Texto</button>
-        <div class="output" id="output2"></div>
         <label for="specialCharacter">Marcações de jogo:</label>
         <input type="text" id="specialCharacter" value="">
         <button class="special-char-button" onclick="addSpecialCharacter()">Adicionar</button>
@@ -123,91 +120,91 @@
   </div>
 
   <script>
-  function countCharacters(textboxNumber) {
-    const textboxId = `textbox${textboxNumber}`;
-    const outputId = `output${textboxNumber}`;
+    function countCharacters(textboxNumber) {
+      const textboxId = `textbox${textboxNumber}`;
+      const outputId = `output${textboxNumber}`;
 
-    const textbox = document.getElementById(textboxId);
-    const outputDiv = document.getElementById(outputId);
+      const textbox = document.getElementById(textboxId);
+      const outputDiv = document.getElementById(outputId);
 
-    const lines = textbox.value.split('\n');
-    let outputHTML = '';
+      const lines = textbox.value.split('\n');
+      let outputHTML = '';
 
-    for (let i = 0; i < lines.length; i++) {
-      const text = lines[i];
-      outputHTML += `Linha ${i + 1}: ${text.length} caracteres<br>`;
-    }
-
-    outputDiv.innerHTML = outputHTML;
-  }
-
-  function copyText(textboxNumber) {
-    const textboxId = `textbox${textboxNumber}`;
-    const textbox = document.getElementById(textboxId);
-    
-    textbox.select();
-    document.execCommand("copy");
-  }
-
-  function removeLineBreaks() {
-    const textboxModified = document.getElementById('textbox2');
-    const textWithoutLineBreaks = textboxModified.value.replace(/\n/g, ' ');
-    textboxModified.value = textWithoutLineBreaks;
-    countCharacters(2); // Atualize a contagem de caracteres
-  }
-
-  function addLineBreaks() {
-    const textboxModified = document.getElementById('textbox2');
-    const lineBreakInterval = parseInt(document.getElementById('lineBreakInterval').value);
-    const textWithLineBreaks = addLineBreaksToText(textboxModified.value, lineBreakInterval);
-    textboxModified.value = textWithLineBreaks;
-    countCharacters(2); // Atualize a contagem de caracteres
-  }
-
-  function addSpecialCharacter() {
-    const textboxModified = document.getElementById('textbox2');
-    const specialCharacter = document.getElementById('specialCharacter').value;
-    const textWithSpecialCharacter = addSpecialCharacterToText(textboxModified.value, specialCharacter);
-    textboxModified.value = textWithSpecialCharacter;
-    countCharacters(2); // Atualize a contagem de caracteres
-  }
-
-  function addSpecialCharacterToText(text, specialCharacter) {
-    const lines = text.split('\n');
-    const resultLines = [];
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      if (i === lines.length - 1) {
-        resultLines.push(line); // Última linha, não adicione o caractere especial
-      } else {
-        resultLines.push(line + specialCharacter); // Adicione o caractere especial ao final de cada linha, exceto na última
+      for (let i = 0; i < lines.length; i++) {
+        const text = lines[i];
+        outputHTML += `Linha ${i + 1}: ${text.length} caracteres<br>`;
       }
+
+      outputDiv.innerHTML = outputHTML;
     }
 
-    return resultLines.join('\n');
-  }
+    function copyText(textboxNumber) {
+      const textboxId = `textbox${textboxNumber}`;
+      const textbox = document.getElementById(textboxId);
 
-  function addLineBreaksToText(text, lineBreakInterval) {
-    const words = text.split(' ');
-    let lines = [];
-    let currentLine = '';
+      textbox.select();
+      document.execCommand("copy");
+    }
 
-    for (const word of words) {
-      if ((currentLine + ' ' + word).length <= lineBreakInterval) {
-        currentLine += (currentLine === '' ? '' : ' ') + word;
-      } else {
+    function removeLineBreaks() {
+      const textboxModified = document.getElementById('textbox2');
+      const textWithoutLineBreaks = textboxModified.value.replace(/\n/g, ' ');
+      textboxModified.value = textWithoutLineBreaks;
+      countCharacters(2); // Atualize a contagem de caracteres
+    }
+
+    function addLineBreaks() {
+      const textboxModified = document.getElementById('textbox2');
+      const lineBreakInterval = parseInt(document.getElementById('lineBreakInterval').value);
+      const textWithLineBreaks = addLineBreaksToText(textboxModified.value, lineBreakInterval);
+      textboxModified.value = textWithLineBreaks;
+      countCharacters(2); // Atualize a contagem de caracteres
+    }
+
+    function addSpecialCharacter() {
+      const textboxModified = document.getElementById('textbox2');
+      const specialCharacter = document.getElementById('specialCharacter').value;
+      const textWithSpecialCharacter = addSpecialCharacterToText(textboxModified.value, specialCharacter);
+      textboxModified.value = textWithSpecialCharacter;
+      countCharacters(2); // Atualize a contagem de caracteres
+    }
+
+    function addSpecialCharacterToText(text, specialCharacter) {
+      const lines = text.split('\n');
+      const resultLines = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (i === lines.length - 1) {
+          resultLines.push(line); // Última linha, não adicione o caractere especial
+        } else {
+          resultLines.push(line + specialCharacter); // Adicione o caractere especial ao final de cada linha, exceto na última
+        }
+      }
+
+      return resultLines.join('\n');
+    }
+
+    function addLineBreaksToText(text, lineBreakInterval) {
+      const words = text.split(' ');
+      let lines = [];
+      let currentLine = '';
+
+      for (const word of words) {
+        if ((currentLine + ' ' + word).length <= lineBreakInterval) {
+          currentLine += (currentLine === '' ? '' : ' ') + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+
+      if (currentLine !== '') {
         lines.push(currentLine);
-        currentLine = word;
       }
-    }
 
-    if (currentLine !== '') {
-      lines.push(currentLine);
+      return lines.join('\n');
     }
-
-    return lines.join('\n');
-  }
-</script>
+  </script>
 </body>
 </html>
